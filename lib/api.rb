@@ -22,5 +22,21 @@ module Api
     self.CallApi method:"GetCampaignsList"
   end
 
+  def self.GetRegions
+    self.CallApi method:"GetRegions"
+  end
+
+  def self.CreateNewForecast (phrases=[],geo=[],categories=[])
+    self.CallApi method:"CreateNewForecast", param:{
+      Phrases: phrases,
+      Geo: geo,
+      Categories: categories
+    }
+  end
+
+  def self.GetForecast (params)
+    self.CallApi method:"GetForecast", param:params
+  end
+
 
 end
