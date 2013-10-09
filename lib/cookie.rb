@@ -10,8 +10,8 @@ module Cookie
     result
   end
 
-def self.FromFile(path)
-  cookies=File.read(path)
+def self.FromFile(filename)
+  cookies=File.read(filename)
   self.FromString(cookies.gsub("\n",""))
 end
   
