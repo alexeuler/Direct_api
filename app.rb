@@ -7,7 +7,7 @@ require_relative 'lib/bids'
 def request_and_parse
   doc=RestClient.get "https://direct.yandex.ru/registered/main.pl?cmd=showCamp&cid=7634904&ulogin=", :cookies => Cookie.FromFile(File.expand_path(File.join(File.dirname(__FILE__), "cookie.txt")))
   result=Parse.CampaignParams(doc)
-  Bids.UpdateAll result
+  Bids.UpdateAll result unless result.empty?
   File.open(File.join(File.dirname(__FILE__), "stats.csv"), 'a:windows-1251') { |f| f.write(result) }
 
 end
