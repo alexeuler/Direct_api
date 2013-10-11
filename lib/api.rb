@@ -38,5 +38,8 @@ module Api
     self.CallApi method:"GetForecast", param:params
   end
 
+  def self.UpdatePrices(params)
+    puts self.CallApi method:"UpdatePrices", param:params
+  end
 
 end
