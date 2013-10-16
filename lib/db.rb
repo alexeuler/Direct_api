@@ -27,11 +27,10 @@ module DB
     result
   end
 
-
   def self.insert(hash)
     begin
-      columns=""
-      values=""
+      columns="created_at,"
+      values="datetime('now'),"
       hash.each_pair do |column, value|
         columns+="\'#{column}\',"
         values+="\'#{value}\',"
@@ -43,8 +42,22 @@ module DB
     rescue SQLite3::Exception => e
       puts "db exception: #{e}"
     end
-    
   end
 
-
+  def self.phrases(where="",params=[])
+    begin
+      result=[]
+      db = SQLite3::Database.open "stats.db"
+      db.execute("select distinct phrase from stats"+' '+where,params) do |item|
+        result.push item
+      end
+    rescue SQLite3::Exception => e
+      puts "db exception: #{e}"
+    end
+    result
+  end
+  
 end
+
+
+

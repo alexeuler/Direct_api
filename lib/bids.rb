@@ -1,46 +1,26 @@
 require_relative 'api'
+require_relative 'db'
 
 module Bids
 
-
-def self.Update(data_csv)
-@cap=15.0
-@small=1.0
-
-  @s=data_csv.gsub(',','.').split(';')
-  @data={
-    year: @s[0].to_i,
-    month: @s[1].to_i,
-    day: @s[2].to_i,
-    hour: @s[3].to_i,
-    minute: @s[4].to_i,
-    second: @s[5].to_i,
-    phrase: @s[6],
-    ad_id: @s[7].to_i,
-    phrase_id: @s[8].to_i,
-    impressions: @s[9].to_i,
-    clicks: @s[10].to_i,
-    ctr: @s[11].to_f,
-    pmax: @s[12].to_f,
-    pmin: @s[13].to_f,
-    max: @s[14].to_f,
-    min: @s[15].to_f,
-    price: @s[16].to_f
-  }
-
-  return { PhraseID: @data[:phrase_id], Price: @small/25.5} if @data[:pmin]>@cap and @data[:price]>(@cap+@small)/2
-  return { PhraseID: @data[:phrase_id], Price: [@data[:pmin]+0.3,@cap].max/25.5} if @data[:pmin]<=@cap*1.1 and @data[:price]<(@cap+@small)/2
-  nil
-end
-
-def self.UpdateAll(data_csv)
-  @data=data_csv.split("\n")
-  @arr=[]
-  @data.each do |chunk|
-    @result=self.Update(chunk)
-    @arr.push @result unless @result.nil?
+  def self.strategy1
+    params={
+      min: 1,
+      max: 15,
+      upside: 0.3
+    }
+    api_data=[]
+    phrases=DB.phrases "where created_at>datetime('now','-1 days')"
+    phrases.each do |phrase|
+      data=DB.select "where phrase is \'#{phrase[0]}\' and created_at>datetime('now', '-30 minutes')"
+      prices=data.map {|row| row['pmin']}
+      min_price=prices.min        # minimum price in last 30 minutes
+      last_price=data.last['pmin']
+      id=data.last['id2']
+      api_data.push({ PhraseID: id, Price: params[:max]/25.5}) if min_price<params[:max]*(1+params[:upside]) and last_price!=params[:max]
+      api_data.push({ PhraseID: id, Price: params[:min]/25.5}) if min_price>params[:max]*(1+params[:upside]) and last_price!=params[:min]
+    end
+    Api.UpdatePrices api_data
   end
-  Api.UpdatePrices @arr
-end
 
 end

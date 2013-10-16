@@ -11,14 +11,10 @@ def request_and_parse
   result.each do |x|
     DB.insert(x)
   end
-  #Bids.UpdateAll result unless result.empty?
-  #File.open(File.join(File.dirname(__FILE__), "stats.csv"), 'a:windows-1251') { |f| f.write(result) }
-
+  Bids.strategy1
 end
 
-#loop do
+loop do
   request_and_parse
-#  sleep(300+rand(20))
-#end
-#DB.insert({created_at: 3, impressions: 25, ctr: 0.5})
-#puts DB.select 'where created_at>?',
+  sleep(300+rand(20))
+end

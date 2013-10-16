@@ -8,7 +8,6 @@ module Parse
     doc.css('tr.b-phrases-list-phrase').each do |x|
       ids=x.css('.b-edit-phrase-price__price')[0]['name'].split("_")
       result.push({
-        created_at: Time.now,
         phrase: x.css('.b-phrases-list-phrase__key-words')[0].children.to_s,
         id1: ids[1],
         id2: ids[2],
