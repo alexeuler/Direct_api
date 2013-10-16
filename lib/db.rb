@@ -1,10 +1,13 @@
 require 'sqlite3'
 
 module DB
+
+  @path=File.expand_path(File.join(File.dirname(__FILE__), "../stats.db"))
+
   def self.select(where="",params=[])
     result=[]
     begin
-      db = SQLite3::Database.open "stats.db"
+      db = SQLite3::Database.open @path
       db.results_as_hash=true
       sql='select * from stats'+' '+where
       db.execute(sql,params) do |row|
@@ -18,7 +21,7 @@ module DB
 
   def self.delete(where="",params=[])
     begin
-      db = SQLite3::Database.open "stats.db"
+      db = SQLite3::Database.open @path
       sql='delete from stats'+' '+where
       db.execute(sql,params) 
     rescue SQLite3::Exception => e
@@ -37,7 +40,7 @@ module DB
       end
       columns=columns[0, columns.length - 1]
       values=values[0, values.length - 1]
-      db = SQLite3::Database.open "stats.db"
+      db = SQLite3::Database.open @path
       db.execute("insert into stats (#{columns}) values (#{values})")
     rescue SQLite3::Exception => e
       puts "db exception: #{e}"
@@ -47,7 +50,7 @@ module DB
   def self.phrases(where="",params=[])
     begin
       result=[]
-      db = SQLite3::Database.open "stats.db"
+      db = SQLite3::Database.open @path
       db.execute("select distinct phrase from stats"+' '+where,params) do |item|
         result.push item
       end
