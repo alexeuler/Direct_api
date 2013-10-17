@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 require_relative 'lib/api'
-require_relative 'lib/cookie'
-require_relative 'lib/parse'
 require_relative 'lib/bids'
 require_relative 'lib/db'
 
