@@ -42,4 +42,40 @@ module Api
     puts self.CallApi method:"UpdatePrices", param:params
   end
 
+  def self.GetPhrases(campaign_id)
+    res=[]
+    data=JSON.parse self.CallApi(method:"GetBanners", param:{
+                                   CampaignIDS:campaign_id,
+                                   GetPhrases:"WithPrices"
+                                 })
+    
+    data['data'].each do |banner|
+      banner['Phrases'].each do |phrase| 
+        ctr=phrase['Shows']==0 ? 0 : phrase['Clicks'].to_f/phrase['Shows'].to_f*100
+        res.push ({
+                  phrase: phrase['Phrase'],
+                  id1: phrase['BannerID'],
+                  id2: phrase['PhraseID'],
+                  impressions: phrase['Shows'],
+                  clicks: phrase['Clicks'],
+                  ctr: ctr.round(1),
+                  pmin: phrase['PremiumMin'],
+                  pmax: phrase['PremiumMax'],
+                  gmin: phrase['Min'],
+                  gmax: phrase['Max'],
+                  price: phrase['Price'],
+                  price_search: phrase['CurrentOnSearch'],
+                  p1: phrase['Prices'][0],
+                  p2: phrase['Prices'][1],
+                  p3: phrase['Prices'][2],
+                  p4: phrase['Prices'][3],
+                  p5: phrase['Prices'][4],
+                  p6: phrase['Prices'][5]
+                })
+      end
+    end
+    res
+  end
+
+
 end
