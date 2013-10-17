@@ -52,6 +52,7 @@ module Api
     data['data'].each do |banner|
       banner['Phrases'].each do |phrase| 
         ctr=phrase['Shows']==0 ? 0 : phrase['Clicks'].to_f/phrase['Shows'].to_f*100
+        prices=phrase['Prices'].sort!.reverse!
         res.push ({
                   phrase: phrase['Phrase'],
                   id1: phrase['BannerID'],
@@ -65,12 +66,12 @@ module Api
                   gmax: phrase['Max'],
                   price: phrase['Price'],
                   price_search: phrase['CurrentOnSearch'],
-                  p1: phrase['Prices'][0],
-                  p2: phrase['Prices'][1],
-                  p3: phrase['Prices'][2],
-                  p4: phrase['Prices'][3],
-                  p5: phrase['Prices'][4],
-                  p6: phrase['Prices'][5]
+                  p1: prices[0],
+                  p2: prices[1],
+                  p3: prices[2],
+                  p4: prices[3],
+                  p5: prices[4],
+                  p6: prices[5]
                 })
       end
     end
