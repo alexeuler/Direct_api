@@ -6,8 +6,8 @@ module Bids
   def self.strategy1
     params={
       min: 1,
-      max: 15,
-      upside: 0.3
+      max: 20,
+      upside: 0.25
     }
     api_data=[]
     phrases=DB.phrases "where created_at>datetime('now','-1 days')"
