@@ -11,7 +11,7 @@ module Api
 
   def self.CallApi(params)
     data=@@default_params.merge!(params).to_json
-    RestClient.post("https://api.direct.yandex.ru/json-api/v4/", data)
+    RestClient.post("https://api.direct.yandex.ru/json-api/v4/", data).force_encoding("UTF-8")
   end
 
   def self.GetClientInfo (params)
